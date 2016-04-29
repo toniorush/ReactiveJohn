@@ -69,7 +69,7 @@ Tracker.autorun(() => {
 		var eventsCollection = Sequences.find({}).fetch();
 
     // create a view for timeline
-		John.create(Sequences, lanes, eventsCollection, "#john_anchor_1", function(time){
+		TheJohn = John.create(Sequences, lanes, eventsCollection, "#john_anchor_1", function(time){
 			var currentTime = TheTime.find('timer').fetch();
 			// inverse playing
 			var playing = !currentTime[0].playing;
@@ -83,7 +83,7 @@ Tracker.autorun(() => {
 Tracker.autorun(() => {
 	var currentTime = TheTime.find('timer').fetch();
 	if(currentTime.length == 1) {
-		John.setTime(currentTime[0].time, currentTime[0].john_start, currentTime[0].playing);
+		TheJohn.setTime(currentTime[0].time, currentTime[0].john_start, currentTime[0].playing);
 	}
 });
 
@@ -91,7 +91,7 @@ Template.body.events({
   'submit .karma-edit'(event) {
     // Prevent default browser form submit
     event.preventDefault();
-    //console.log(John.items);
+    //console.log(TheJohn.items);
     // Get value from form element
     const target = event.target;
     const newKarma = target.karmaMenu.value;
@@ -103,7 +103,7 @@ Template.body.events({
       }
     }
 
-    John.items.forEach(editKarmaForSelectedItem);
+    TheJohn.items.forEach(editKarmaForSelectedItem);
 
 
 //    Sequences.insert({"lane": lane, "karma": karma, "start": start, "end": end});
@@ -164,7 +164,7 @@ Template.body.events({
     // iteratively create events and add them to the score
     // as long as not exceeding concert duration
     while( currentConcertDuration < formConcertDuration ){
-      
+
       var players = [0, 1, 2, 3, 4, 5, 6];
       // decide how many players will play next sequence
       //var nPlayers = Math.floor(Math.random()*(players.length)); // should be decided by formular
@@ -178,7 +178,7 @@ Template.body.events({
 
       var activePlayersForThisSequence = [];
       var uniqueRandoms = [];
-  
+
       for (var i = 0; i < nPlayers; i++){
           var index = Math.floor(Math.random() * players.length);
           activePlayersForThisSequence.push(players[index]);
@@ -190,7 +190,7 @@ Template.body.events({
       for (var i = 0; i < activePlayersForThisSequence.length; i++){
         currentKarma = karmas[Math.floor(Math.random() * karmas.length)];
         console.log("currentKarma:" + currentKarma);
-        Sequences.insert({"lane": activePlayersForThisSequence[i], "karma": currentKarma, "start": currentConcertDuration, "end": currentConcertDuration + currentEventDuration});        
+        Sequences.insert({"lane": activePlayersForThisSequence[i], "karma": currentKarma, "start": currentConcertDuration, "end": currentConcertDuration + currentEventDuration});
       }
 
       currentConcertDuration += currentEventDuration;
@@ -222,7 +222,7 @@ Template.body.events({
       // Prevent default browser form submit
       e.preventDefault();
       console.log("yohou");
-      // Get value from form element        
+      // Get value from form element
       function deleteSelectedItem(element) {
         if (element.selected){
           console.log("element._id:", element._id);
@@ -231,8 +231,8 @@ Template.body.events({
           var theQuery = {"_id": element._id};
           Meteor.call('removeSequences', theQuery);
         }
-      } 
-      John.items.forEach(deleteSelectedItem);
+      }
+      TheJohn.items.forEach(deleteSelectedItem);
     },
     'click .clear-score': function(e) {
       e.preventDefault();
@@ -242,7 +242,7 @@ Template.body.events({
       e.preventDefault();
       // erase previous outdated links
       $('#download_anchor').html("");
-      var myScore = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(John.items));
+      var myScore = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(TheJohn.items));
       $('<a href="data:' + myScore + '" download="sequences.json">download JSON</a>').appendTo('#download_anchor');
     }
   });
@@ -256,18 +256,18 @@ var connectButton;
 var label;
 var xypad;
 
-function init() {  
-//   panel = new Interface.Panel({  
-//    background:"#fff", 
+function init() {
+//   panel = new Interface.Panel({
+//    background:"#fff",
 //    stroke:"#000",
 //    container:$("#panel"),
 //    useRelativeSizesAndPositions : true
-//  }); 
-  
-  connectButton = new Interface.Button({ 
+//  });
+
+  connectButton = new Interface.Button({
     background:"#fff",
-    bounds:[0.,0.,0.2,0.05 ],  
-    label:'WebSocket Connect',    
+    bounds:[0.,0.,0.2,0.05 ],
+    label:'WebSocket Connect',
     size:14,
     stroke:"#000",
     style:'normal',
@@ -276,8 +276,8 @@ function init() {
       toggleConnection();
     }
   });
-  
-  label = new Interface.Label({ 
+
+  label = new Interface.Label({
     bounds:[0.21,0.,0.9, 0.05],
     value:'',
     hAlign:'left',
@@ -286,7 +286,7 @@ function init() {
     stroke:"#000",
     style:'normal'
   });
-  
+
 //  xypad = new Interface.XY({
 //    background:"#fff",
 //    stroke:"#000",
@@ -299,7 +299,7 @@ function init() {
 //    maxVelocity : 100,
 //    detectCollisions : true,
 //    onvaluechange : function() {
-//      if(gConnection) 
+//      if(gConnection)
 //        gConnection.send(JSON.stringify(this.values[0], function(key, val) {
 //                                              return val.toFixed ? Number(val.toFixed(3)) : val;
 //                                          })
@@ -307,7 +307,7 @@ function init() {
 //    },
 //    oninit: function() { this.rainbow() }
 //  });
-  
+
 //  panel.add(connectButton, label, xypad);
 }
 
@@ -322,7 +322,7 @@ function ws_connect() {
         writeToScreen('Connecting');
         gConnection = new WebSocket('ws://' + window.location.host + '/maxmsp');
         gConnection.onopen = function(ev) {
-        
+
             connectButton.label = "WebSocket Disconnect";
 //            document.getElementById("update").disabled=false;
 //            document.getElementById("update").innerHTML = "Disable Update";
@@ -344,7 +344,7 @@ function ws_connect() {
           if(ev.data.substr(0, 3) == "rx ")
           {
             json = ev.data.substr(3);
-            
+
             if(json.substr(0, 7) == "set_id ")
             {
               gConnectionID = parseInt(json.substr(7));
@@ -359,7 +359,7 @@ function ws_connect() {
               xypad.refresh();
             }
           }
-          
+
           writeToScreen('RECEIVED: ' + ev.data);
         };
 

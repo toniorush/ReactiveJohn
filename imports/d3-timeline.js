@@ -8,6 +8,11 @@ export const John = { extensions: {} };
 import '../client/lib/utils.js';
 
 John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
+	return new john_constructor(Sequences, lanes, items, main_anchor, start_callback);
+}
+
+function john_constructor (Sequences, lanes, items, main_anchor, start_callback) {
+
 	console.log("john created");
 	// clear whatever already exists in main anchor
 	d3.select(main_anchor).html("");
@@ -71,7 +76,7 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 	var y2 = d3.scale.linear()
 			.domain([0, laneLength])
 			.range([0, miniHeight]);
-	
+
 
 	// create the chart as an svg element
 	var chart = d3.select(main_anchor)
@@ -129,7 +134,7 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 		.attr("text-anchor", "end")
 		.attr("class", "laneText")
 		.style("fill", function(d, i) {return "hsl(" + i / laneLength * 360. + ",50%,40%)";});// a color for each lane
- 
+
 
 	//mini lanes and texts
 	mini.append("g").selectAll(".laneLines")
@@ -261,7 +266,7 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 			.style("fill-opacity", "0.7");
 		deleteButtons.exit().remove();
 		// updates rbrushes
-		//rbrushes = 
+		//rbrushes =
 
 		//update the item labels
 		labels = itemRects.selectAll("text")
@@ -332,10 +337,10 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 		 //console.log(d3.select(this));
 		//	selectedEvents.push(d._id);
 	}
-	
+
 	function dragmove(d) {
 		//console.log(d3.event, d3.event);
-		
+
 		var minExtent = brush.extent()[0],
 			maxExtent = brush.extent()[1];
 		//console.log('min/max brush', minExtent, maxExtent);
@@ -357,7 +362,7 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 		d3.select("text[_id='"+d._id+"']")
 				.attr("x", newPosition);
 	}
-	
+
 	function dragend(d) {
 		//console.log(d3.select(this));
 		//console.log(xb(d3.select(this)[0][0].x.baseVal.value));
@@ -370,10 +375,10 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 
 		if (d.selected)	d3.select(this).style("fill", "red")
 			else d3.select(this).style("fill", function(d, i) {return "hsl(" + d.lane / laneLength * 360. + ",50%,40%)";});
-	
+
 	  	var minExtent = brush.extent()[0],
 			maxExtent = brush.extent()[1];
-		
+
 		//x1.domain([0, maxExtent-minExtent]);
 
 		// scale function from graph position to data value
@@ -385,7 +390,7 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 
 		// color back to normal
 		//d3.select(this).style("fill", null);
-	
+
 		// update data info
 		//var duration = (d.end - d.start);
 		//console.log('this :', this);
@@ -399,9 +404,9 @@ John.create = function (Sequences, lanes, items, main_anchor, start_callback) {
 		//console.log('new duration :', duration);
 
 		// convert graph position to data value
-		d.start = newStart; // 
+		d.start = newStart; //
 		d.end = d.start + duration;
-	
+
 		// update display to move label along
 		// display();
 
